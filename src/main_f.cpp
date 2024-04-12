@@ -74,7 +74,7 @@ int main(void){
   uint16_t value = fdc1004.get_config_register();
   printf("CONFIG REGISTER YY: "BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(value)); 
 
-  fdc1004.reset(value);
+  fdc1004.reset();
 
   value = fdc1004.get_config_register();
 
@@ -87,33 +87,45 @@ int main(void){
  //value = fdc1004.get_config_register();
 
 
+  fdc1004.reset();
 
-
- 
-  fdc1004.set_repeated_measurements(value, true);
+  fdc1004.set_repeated_measurements(true);
 
   printf("After reset, only repeated " BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(value));
 
 
-  fdc1004.enable_measurement_1(value);//Messungen aktivieren
-  fdc1004.enable_measurement_2(value);
-  fdc1004.enable_measurement_3(value);
-  fdc1004.enable_measurement_4(value);
+  fdc1004.enable_measurement_1();//Messungen aktivieren
+  fdc1004.enable_measurement_2();
+  fdc1004.enable_measurement_3();
+  fdc1004.enable_measurement_4();
 
-  fdc1004.set_measurement_channel_config(FDC1004::Register::ConfigMeasurementReg1, FDC1004::Channel::CIN1, FDC1004::Channel::DISABLED);
-  // uint measureChannel1 = fdc1004.get_measurement_channel_config(FDC1004::Register::ConfigMeasurementReg1);
+  //fdc1004.set_measurement_offset_capacitance(FDC1004::Register::ConfigMeasurementReg1, 31);//Einstellbar von 0 bis 31, 0 => kein Offset, 31 => 96,875pF Offset
 
   uint16_t testausgabe_config1 = fdc1004.get_CONF_MEAS1();
+  printf("Configurationsregister zur Messung 1 CAPDAC: " BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(testausgabe_config1));
+
+  // fdc1004.set_measurement_channel_config(FDC1004::Register::ConfigMeasurementReg1, FDC1004::Channel::CIN1, FDC1004::Channel::CAPDAC, 31);
+  // uint measureChannel1 = fdc1004.get_measurement_channel_config(FDC1004::Register::ConfigMeasurementReg1);
+
+  testausgabe_config1 = fdc1004.get_CONF_MEAS1();
   printf("Configurationsregister zur Messung 1: " BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(testausgabe_config1));
 
   fdc1004.set_measurement_channel_config(FDC1004::Register::ConfigMeasurementReg2, FDC1004::Channel::CIN2, FDC1004::Channel::DISABLED);
-
-
   fdc1004.set_measurement_channel_config(FDC1004::Register::ConfigMeasurementReg3, FDC1004::Channel::CIN3, FDC1004::Channel::DISABLED);
   fdc1004.set_measurement_channel_config(FDC1004::Register::ConfigMeasurementReg4, FDC1004::Channel::CIN4, FDC1004::Channel::DISABLED);
+  fdc1004.set_measurement_channel_config(FDC1004::Register::ConfigMeasurementReg4, FDC1004::Channel::CIN4, FDC1004::Channel::DISABLED);
+
+  // uint16_t configreg4 = fdc1004.get_register((char)FDC1004::Register::ConfigMeasurementReg4);
+  // printf("Measurement 4 config register before"BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(configreg4));
+  // fdc1004.set_measurement_channel_config(FDC1004::Register::ConfigMeasurementReg4, FDC1004::Channel::CIN4, FDC1004::Channel::CAPDAC, 31);
+  // configreg4 = fdc1004.get_register((char)FDC1004::Register::ConfigMeasurementReg4);
+  // printf("Measurement 4 config register after"BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(configreg4));
+
   
+  //fdc1004.set_measurement_rate(FDC1004::MeasurementRate::Rate100);
 
   //printf("config register: %04X\r\n", value);
+  value = fdc1004.get_config_register();
   printf("EWARTET; CONFIG REGISTER 4 5 6 7 gesetzt: "BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(value));
   
   
@@ -162,13 +174,9 @@ int main(void){
 
     wait_us(4000*1000);
 
-    //averaging
-    /*
-    uint16_t 
-    
-    
-    
-    */
+
+
+
   }
 
 

@@ -3,6 +3,7 @@
 #define FDC1004_ADRESS 0b1010000 << 1
 
 
+
 using namespace mbed;
 
 FDC1004::FDC1004(mbed::I2C& i2c) :
@@ -144,25 +145,79 @@ uint32_t FDC1004::getMeasure4(){
 }
 
 
-void FDC1004::reset(uint16_t& value){
+void FDC1004::reset(){
 
+    uint16_t value = 0;
     set_config_register_bit(value, 15, 1);
 }
 
-void FDC1004::set_repeated_measurements(uint16_t& value, bool set){
+void FDC1004::set_repeated_measurements(bool set){
+
+    uint16_t value = 0;
 
     if(set){set_config_register_bit(value, 8, 1);}else{set_config_register_bit(value, 8, 0);}
 
 }
 
-void FDC1004::set_measurement_channel_config(FDC1004::Register measureConfigReg, FDC1004::Channel channelA, FDC1004::Channel channelB){
+bool FDC1004::set_measurement_offset_capacitance(FDC1004::Register measureConfigReg, uint8_t offset){
 
-    uint16_t measure_config_value = 0; // = get_register(0x00);
+    uint16_t value = get_register((char)measureConfigReg);
+    if(offset > 31 || offset < 0){
+        //printf("Offset im falschen Bereich, maximal 31");
+        return false;
+    }
 
-    measure_config_value |= ((uint16_t)channelA << 13);
-    measure_config_value |= ((uint16_t)channelB << 10);
+    //uint16_t capdac = 0;
+    value |= (offset << 5);
+    write_register(measureConfigReg, value);
+    return true;
 
-    write_register(measureConfigReg, measure_config_value);
+}
+
+bool FDC1004::set_measurement_channel_config(FDC1004::Register measureConfigReg, FDC1004::Channel channelA, FDC1004::Channel channelB, uint8_t capdacValue)
+{
+    // uint16_t value = get_register((char)measureConfigReg);
+    uint16_t value = 0x00;
+    value |= ((uint16_t)channelA << 13);
+    value |= ((uint16_t)channelB << 10);
+
+    bool success = true;
+
+    if (channelB == FDC1004::Channel::CAPDAC)
+    {
+        if(capdacValue > 31)
+        {
+            //printf("Offset im falschen Bereich, maximal 31");
+            return false;
+        }
+        value |= (capdacValue << 5);
+    }
+
+    write_register(measureConfigReg, value);
+    return success;   
+}
+
+void FDC1004::set_measurement_rate(FDC1004::MeasurementRate rate){
+
+
+    uint16_t value = get_config_register();
+
+    value &= ~(0x03 << 10);
+    value |= ((uint8_t)rate) << 10;
+
+    if(rate == FDC1004::MeasurementRate::Rate100){
+        set_config_register_bit(value, 11, 0);
+        set_config_register_bit(value, 10, 1);
+    } else if(rate == FDC1004::MeasurementRate::Rate200){
+        set_config_register_bit(value, 11, 1);
+        set_config_register_bit(value, 10, 0);
+    } else if(rate == FDC1004::MeasurementRate::Rate400){
+
+        set_config_register_bit(value, 11, 1);
+        set_config_register_bit(value, 10, 1);
+    }
+
+    // set_register();
 }
 
 void FDC1004::write_register(FDC1004::Register reg, uint16_t& reg_value){
@@ -178,7 +233,7 @@ void FDC1004::write_register(FDC1004::Register reg, uint16_t& reg_value){
         printf("Fehler i2c write");
     }
 }
-
+/*
 void FDC1004::measurement_rate(uint16_t& value, uint16_t rate){
 
     if(rate == 100){
@@ -193,37 +248,45 @@ void FDC1004::measurement_rate(uint16_t& value, uint16_t rate){
         set_config_register_bit(value, 10, 1);
     }
 }
-
-void FDC1004::enable_measurement_1(uint16_t& value){
+*/
+void FDC1004::enable_measurement_1(){
+    uint16_t value = get_config_register();
     set_config_register_bit(value, 7, 1);
 }
 
-void FDC1004::enable_measurement_2(uint16_t& value){
+void FDC1004::enable_measurement_2(){
+    uint16_t value = get_config_register();
     set_config_register_bit(value, 6, 1);
 }
 
-void FDC1004::enable_measurement_3(uint16_t& value){
+void FDC1004::enable_measurement_3(){
+    uint16_t value = get_config_register();
     set_config_register_bit(value, 5, 1);
 }
 
-void FDC1004::enable_measurement_4(uint16_t& value){
+void FDC1004::enable_measurement_4(){
+    uint16_t value = get_config_register();
     set_config_register_bit(value, 4, 1);
 }
 
 
-void FDC1004::disable_measurement_1(uint16_t& value){
+void FDC1004::disable_measurement_1(){
+    uint16_t value = get_config_register();
     set_config_register_bit(value, 7, 0);
 }
 
-void FDC1004::disable_measurement_2(uint16_t& value){
+void FDC1004::disable_measurement_2(){
+    uint16_t value = get_config_register();
     set_config_register_bit(value, 6, 0);
 }
 
-void FDC1004::disable_measurement_3(uint16_t& value){
+void FDC1004::disable_measurement_3(){
+    uint16_t value = get_config_register();
     set_config_register_bit(value, 5, 0);
 }
 
-void FDC1004::disable_measurement_4(uint16_t& value){
+void FDC1004::disable_measurement_4(){
+    uint16_t value = get_config_register();
     set_config_register_bit(value, 4, 0);
 }
 

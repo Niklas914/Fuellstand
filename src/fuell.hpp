@@ -20,7 +20,14 @@ public:
         CAPDAC = 4,
         DISABLED = 7,
     };
-
+    
+    enum class MeasurementRate : uint8_t
+    {
+        Rate100 = 1,
+        Rate200 = 2,
+        Rate400 = 3,
+    };
+    
     enum class Register : uint8_t
     {
         ConfigMeasurementReg1 = 0x08,
@@ -32,7 +39,7 @@ public:
 public:
     FDC1004(mbed::I2C& i2c);
 
-    uint16_t get_register(char registeraddress);
+    ui16_t get_register(char registeraddress);
 
     uint16_t get_config_register();
 
@@ -67,21 +74,21 @@ public:
 
 
 
+    void set_measurement_rate(FDC1004::MeasurementRate rate);
 
-
-    void reset(uint16_t& value);
+    void reset();
     void measurement_rate(uint16_t& value, uint16_t rate);
-    void set_repeated_measurements(uint16_t& value, bool set);
+    void set_repeated_measurements(bool set);
 
-    void enable_measurement_1(uint16_t& value);
-    void enable_measurement_2(uint16_t& value);
-    void enable_measurement_3(uint16_t& value);
-    void enable_measurement_4(uint16_t& value);
+    void enable_measurement_1();
+    void enable_measurement_2();
+    void enable_measurement_3();
+    void enable_measurement_4();
 
-    void disable_measurement_1(uint16_t& value);
-    void disable_measurement_2(uint16_t& value);
-    void disable_measurement_3(uint16_t& value);
-    void disable_measurement_4(uint16_t& value);
+    void disable_measurement_1();
+    void disable_measurement_2();
+    void disable_measurement_3();
+    void disable_measurement_4();
 
 
     void set_register_bit(uint16_t& value, u_int8_t position, uint8_t bit, char registeraddress);
@@ -100,7 +107,14 @@ public:
     void activate_differential_measurements_3(uint16_t& value);
     void activate_differential_measurements_4(uint16_t& value);
 
-    void set_measurement_channel_config(FDC1004::Register configReg, FDC1004::Channel channelA, FDC1004::Channel channelB);
+    bool set_measurement_channel_config(
+        
+        FDC1004::Register configReg, 
+        FDC1004::Channel channelA, 
+        FDC1004::Channel channelB,
+        uint8_t capdacValue = 0);
+
+    bool set_measurement_offset_capacitance(FDC1004::Register configReg, uint8_t offset);
 
 
 
