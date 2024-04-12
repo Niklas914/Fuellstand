@@ -159,6 +159,8 @@ void FDC1004::set_repeated_measurements(bool set){
 
 }
 
+
+/*
 bool FDC1004::set_measurement_offset_capacitance(FDC1004::Register measureConfigReg, uint8_t offset){
 
     uint16_t value = get_register((char)measureConfigReg);
@@ -173,6 +175,8 @@ bool FDC1004::set_measurement_offset_capacitance(FDC1004::Register measureConfig
     return true;
 
 }
+
+*/
 
 bool FDC1004::set_measurement_channel_config(FDC1004::Register measureConfigReg, FDC1004::Channel channelA, FDC1004::Channel channelB, uint8_t capdacValue)
 {

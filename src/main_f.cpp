@@ -110,10 +110,12 @@ int main(void){
   testausgabe_config1 = fdc1004.get_CONF_MEAS1();
   printf("Configurationsregister zur Messung 1: " BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(testausgabe_config1));
 
+
+  fdc1004.set_measurement_channel_config(FDC1004::Register::ConfigMeasurementReg1, FDC1004::Channel::CIN1, FDC1004::Channel::DISABLED);
   fdc1004.set_measurement_channel_config(FDC1004::Register::ConfigMeasurementReg2, FDC1004::Channel::CIN2, FDC1004::Channel::DISABLED);
   fdc1004.set_measurement_channel_config(FDC1004::Register::ConfigMeasurementReg3, FDC1004::Channel::CIN3, FDC1004::Channel::DISABLED);
   fdc1004.set_measurement_channel_config(FDC1004::Register::ConfigMeasurementReg4, FDC1004::Channel::CIN4, FDC1004::Channel::DISABLED);
-  fdc1004.set_measurement_channel_config(FDC1004::Register::ConfigMeasurementReg4, FDC1004::Channel::CIN4, FDC1004::Channel::DISABLED);
+  
 
   // uint16_t configreg4 = fdc1004.get_register((char)FDC1004::Register::ConfigMeasurementReg4);
   // printf("Measurement 4 config register before"BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(configreg4));

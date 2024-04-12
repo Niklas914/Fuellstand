@@ -39,7 +39,7 @@ public:
 public:
     FDC1004(mbed::I2C& i2c);
 
-    ui16_t get_register(char registeraddress);
+    uint16_t get_register(char registeraddress);
 
     uint16_t get_config_register();
 
