@@ -109,6 +109,39 @@ uint16_t FDC1004::get_register(char registeraddress){
 }
 
 
+uint32_t FDC1004::getMeasure1(){
+
+    uint16_t meas1_1 = get_MEAS1_MSB();
+    uint16_t meas1_2 = get_MEAS1_LSB();
+    uint32_t complete_measure_binary1 = meas1_2 >> 8;
+    complete_measure_binary1 += meas1_1 << 8;
+    return complete_measure_binary1;
+}
+
+uint32_t FDC1004::getMeasure2(){
+
+    uint16_t meas2_1 = get_MEAS2_MSB();
+    uint16_t meas2_2 = get_MEAS2_LSB();
+    uint32_t complete_measure_binary2 = meas2_2 >> 8;
+    complete_measure_binary2 += meas2_1 << 8;
+    return complete_measure_binary2;
+}
+uint32_t FDC1004::getMeasure3(){
+
+    uint16_t meas3_1 = get_MEAS3_MSB();
+    uint16_t meas3_2 = get_MEAS3_LSB();
+    uint32_t complete_measure_binary3 = meas3_2 >> 8;
+    complete_measure_binary3 += meas3_1 << 8;
+    return complete_measure_binary3;
+}
+uint32_t FDC1004::getMeasure4(){
+
+    uint16_t meas4_1 = get_MEAS4_MSB();
+    uint16_t meas4_2 = get_MEAS4_LSB();
+    uint32_t complete_measure_binary4 = meas4_2 >> 8;
+    complete_measure_binary4 += meas4_1 << 8;
+    return complete_measure_binary4;
+}
 
 
 void FDC1004::reset(uint16_t& value){
@@ -194,13 +227,6 @@ void FDC1004::disable_measurement_4(uint16_t& value){
     set_config_register_bit(value, 4, 0);
 }
 
-
-/*
-void FDC1004::select_capdac_offset_capacity(uint16_t& value, ){
-
-
-}
-*/
 
 
 void FDC1004::activate_differential_measurements_1(uint16_t& value){

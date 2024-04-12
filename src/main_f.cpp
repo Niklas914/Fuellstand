@@ -94,10 +94,11 @@ int main(void){
 
   printf("After reset, only repeated " BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(value));
 
-  fdc1004.set_config_register_bit(value, 4, 1);//Aktivieren der einzelnen Messungen, 1 = enable, 0 = disable
-  fdc1004.set_config_register_bit(value, 5, 1);
-  fdc1004.set_config_register_bit(value, 6, 1);
-  fdc1004.set_config_register_bit(value, 7, 1);
+
+  fdc1004.enable_measurement_1(value);//Messungen aktivieren
+  fdc1004.enable_measurement_2(value);
+  fdc1004.enable_measurement_3(value);
+  fdc1004.enable_measurement_4(value);
 
   fdc1004.set_measurement_channel_config(FDC1004::Register::ConfigMeasurementReg1, FDC1004::Channel::CIN1, FDC1004::Channel::DISABLED);
   // uint measureChannel1 = fdc1004.get_measurement_channel_config(FDC1004::Register::ConfigMeasurementReg1);
@@ -124,35 +125,12 @@ int main(void){
   //fdc1004.activate_differential_measurements_3(value);
   //fdc1004.activate_differential_measurements_4(value);
 
-  uint16_t meas1_1 = fdc1004.get_MEAS1_MSB();
-  printf("Measure1 MSB REGISTER NACH GESETZTEM BIT:  "BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(meas1_1));
-  uint16_t meas1_2 = fdc1004.get_MEAS1_LSB();
-  printf("Measure1 LSB REGISTER NACH GESETZTEM BIT:  "BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(meas1_2));
 
 
-  uint32_t complete_measure_binary1 = meas1_2 >> 8;
-  complete_measure_binary1 += meas1_1 << 8;
-  printf("24 BITS (erste 8 FREI): " BYTE_TO_BINARY_PATTERN_32, BYTE_TO_BINARY_32(complete_measure_binary1));
-  printf("24bit ausgabe: %fpF\r\n", (complete_measure_binary1/pow(2, 19)));
 
-  uint16_t meas2_1 = fdc1004.get_MEAS2_MSB();
-  uint16_t meas2_2 = fdc1004.get_MEAS2_LSB();
-  uint32_t complete_measure_binary2 = meas2_2 >> 8;
-  complete_measure_binary2 += meas2_1 << 8;
-
-  uint16_t meas3_1 = fdc1004.get_MEAS3_MSB();
-  uint16_t meas3_2 = fdc1004.get_MEAS3_LSB();
-  uint32_t complete_measure_binary3 = meas3_2 >> 8;
-  complete_measure_binary3 += meas3_1 << 8;
-
-  uint16_t meas4_1 = fdc1004.get_MEAS4_MSB();
-  uint16_t meas4_2 = fdc1004.get_MEAS4_LSB();
-  uint32_t complete_measure_binary4 = meas4_2 >> 8;
-  complete_measure_binary4 += meas4_1 << 8;
 
   //value = fdc1004.get_config_register();
-  // fdc1004.reset(value);
-
+  
   // printf("CONFIG REGISTER AFTER RESET: "BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(value));
   // value = 0;
   // value = fdc1004.get_config_register();
@@ -164,35 +142,21 @@ int main(void){
 
   printf("config register vor while:  " BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(value));
 
+  uint32_t measure1, measure2, measure3, measure4;
+
   int count = 0;
   while(1){
 
-    meas1_1 = fdc1004.get_MEAS1_MSB();
-    meas1_2 = fdc1004.get_MEAS1_LSB();
-    complete_measure_binary1 = meas1_2 >> 8;
-    complete_measure_binary1 += meas1_1 << 8;
 
-    meas2_1 = fdc1004.get_MEAS2_MSB();
-    meas2_2 = fdc1004.get_MEAS2_LSB();
-    complete_measure_binary2 = meas2_2 >> 8;
-    complete_measure_binary2 += meas2_1 << 8;
+    measure1 = fdc1004.getMeasure1();
+    measure2 = fdc1004.getMeasure2();
+    measure3 = fdc1004.getMeasure3();
+    measure4 = fdc1004.getMeasure4();
 
-    meas3_1 = fdc1004.get_MEAS3_MSB();
-    meas3_2 = fdc1004.get_MEAS3_LSB();
-    complete_measure_binary3 = meas3_2 >> 8;
-    complete_measure_binary3 += meas3_1 << 8;
-
-    meas4_1 = fdc1004.get_MEAS4_MSB();
-    meas4_2 = fdc1004.get_MEAS4_LSB();
-    complete_measure_binary4 = meas4_2 >> 8;
-    complete_measure_binary4 += meas4_1 << 8;
-
-
-
-    printf("Measure1: %fpF\r\n", (complete_measure_binary1/pow(2, 19)));
-    printf("Measure2: %fpF\r\n", (complete_measure_binary2/pow(2, 19)));
-    printf("Measure3: %fpF\r\n", (complete_measure_binary3/pow(2, 19)));
-    printf("Measure4: %fpF\r\n", (complete_measure_binary4/pow(2, 19)));
+    printf("Measure1: %fpF\r\n", (measure1/pow(2, 19)));
+    printf("Measure2: %fpF\r\n", (measure2/pow(2, 19)));
+    printf("Measure3: %fpF\r\n", (measure3/pow(2, 19)));
+    printf("Measure4: %fpF\r\n", (measure4/pow(2, 19)));
 
     printf("Durchlauf: %d\r\n\r\n", count+=1);
 

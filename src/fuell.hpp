@@ -60,6 +60,10 @@ public:
     uint16_t get_DEVICE_ID();
 
     
+    uint32_t getMeasure1();
+    uint32_t getMeasure2();
+    uint32_t getMeasure3();
+    uint32_t getMeasure4();
 
 
 
