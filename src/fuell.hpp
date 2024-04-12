@@ -34,6 +34,7 @@ public:
         ConfigMeasurementReg2 = 0x09,
         ConfigMeasurementReg3 = 0x0A,
         ConfigMeasurementReg4 = 0x0B,
+        ConfigRegister = 0x0C,
     };
 
 public:

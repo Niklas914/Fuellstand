@@ -187,10 +187,10 @@ bool FDC1004::set_measurement_channel_config(FDC1004::Register measureConfigReg,
 
     bool success = true;
 
-    if (channelB == FDC1004::Channel::CAPDAC)
-    {
-        if(capdacValue > 31)
-        {
+    if (channelB == FDC1004::Channel::CAPDAC){
+
+        if(capdacValue > 31){
+
             //printf("Offset im falschen Bereich, maximal 31");
             return false;
         }
@@ -221,7 +221,7 @@ void FDC1004::set_measurement_rate(FDC1004::MeasurementRate rate){
         set_config_register_bit(value, 10, 1);
     }
 
-    // set_register();
+    write_register(Register::ConfigRegister, value);
 }
 
 void FDC1004::write_register(FDC1004::Register reg, uint16_t& reg_value){
